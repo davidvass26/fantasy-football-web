@@ -15,6 +15,7 @@ export type Player = {
   pos_rank: number;
   player_display_name: string;
   position: 'QB' | 'RB' | 'WR' | 'TE';
+  team: string;
   age: number;
   is_rookie: 0 | 1;
   prev_fp_per_game: number | null;
@@ -59,6 +60,7 @@ export function loadPlayers(): Player[] {
       pos_rank: Number(row.pos_rank),
       player_display_name: row.player_display_name,
       position: row.position as Player['position'],
+      team: row.team || '',
       age: Number(row.age),
       is_rookie: Number(row.is_rookie) as 0 | 1,
       prev_fp_per_game: row.prev_fp_per_game ? Number(row.prev_fp_per_game) : null,

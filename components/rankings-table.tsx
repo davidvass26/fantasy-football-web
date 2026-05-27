@@ -164,7 +164,6 @@ function ColHeader({
 }
 
 function PlayerRow({ player }: { player: Player }) {
-  const isOverridden = !!player.override_applied;
 
   return (
     <tr className="hover:bg-muted/30 transition-colors">
@@ -176,19 +175,6 @@ function PlayerRow({ player }: { player: Player }) {
         >
           {player.player_display_name}
         </Link>
-        {player.is_rookie === 1 && (
-          <span className="ml-2 inline-block text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
-            Rookie
-          </span>
-        )}
-        {isOverridden && (
-          <span
-            className="ml-2 inline-block text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
-            title={player.override_note || ''}
-          >
-            Adjusted
-          </span>
-        )}
       </td>
       <td className="px-3 py-2">
         <PositionBadge position={player.position} />
