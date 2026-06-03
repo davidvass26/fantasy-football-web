@@ -18,8 +18,7 @@ export default function RankingsPage() {
       <div className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight">Rankings</h1>
         <p className="mt-2 text-muted-foreground">
-          {players.length} players ranked by composite score (40% median / 22% floor / 28% ceiling / 10% efficiency).
-          PPR scoring.
+          {players.length} players ranked by composite score
         </p>
       </div>
 
