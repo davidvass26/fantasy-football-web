@@ -90,7 +90,7 @@ DraftEdge uses a **tiered lookup** by position × draft tier (top 10 / 11–32 /
 
 The headline ranking blends four projections via z-score normalization:
 
-- **Veterans**: 40% median, 22% floor, 28% ceiling, 10% Sharpe
+- **Veterans**: 55% median, 12% floor, 28% ceiling, 5% Sharpe
 - **Rookies**: 15% median, 5% floor, 70% ceiling, 10% Sharpe
 
 The rookie weights deliberately overweight ceiling because rookies are option plays — you draft them for the chance of an outlier outcome, not for a tight median. The split makes the ranking honest about that.
@@ -103,7 +103,7 @@ All cross-position comparisons use VOR — a player's total projection minus the
 
 Built with Next.js 16 (App Router), TypeScript, and Tailwind v4. Deployed on Vercel.
 
-- **Rankings page** — sortable, searchable, filterable table of all 645 players with position color-coding and a neon-accented composite column
+- **Rankings page** — sortable, searchable, filterable table of all 807 players with position color-coding and a neon-accented composite column
 - **Player detail pages** — per-player projection breakdown, ranking by four different strategies (median / floor / ceiling / efficiency), with **dynamic team-color theming** — each player's page picks up their NFL team's primary and secondary brand colors, with a faded team logo embedded as background
 - **Compare players** — side-by-side comparison grid with **per-metric winner highlighting** in each player's team color
 - **Mock draft simulator** — 12-team snake draft against AI opponents (weighted random sampling from the noisy top of the available pool), with an animated "on the clock" state when it's the user's turn
