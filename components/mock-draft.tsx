@@ -1,10 +1,11 @@
 'use client';
 
 // components/mock-draft.tsx
+// Mock draft UI with neon-themed status, on-the-clock pulse, and color-coded position badges.
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, RotateCcw } from 'lucide-react';
-import Link from 'next/link'
+import Link from 'next/link';
 import type { Player } from '@/lib/players';
 import {
   SUPPORTED_TEAM_COUNTS,
@@ -92,16 +93,18 @@ function SetupScreen({
     <div className="max-w-md mx-auto">
       <div className="rounded-md border bg-card p-6 space-y-6">
         <div>
-          <div className="text-sm font-medium mb-2">League size</div>
+          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground mb-3">
+            League size
+          </div>
           <div className="grid grid-cols-4 gap-2">
             {SUPPORTED_TEAM_COUNTS.map((n) => (
               <button
                 key={n}
                 onClick={() => setNumTeams(n)}
-                className={`py-2 rounded-md border text-sm font-medium transition-colors ${
+                className={`py-2 rounded-md border text-sm font-mono tabular-nums font-medium transition-all ${
                   numTeams === n
-                    ? 'bg-foreground text-background border-foreground'
-                    : 'bg-background hover:bg-muted'
+                    ? 'bg-primary text-primary-foreground border-primary shadow-[0_0_16px_var(--neon-glow)]'
+                    : 'bg-background border-border hover:border-primary/40 hover:text-foreground'
                 }`}
               >
                 {n}
@@ -111,7 +114,9 @@ function SetupScreen({
         </div>
 
         <div>
-          <div className="text-sm font-medium mb-2">Your draft slot</div>
+          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground mb-3">
+            Your draft slot
+          </div>
           <div
             className="grid gap-2"
             style={{
@@ -122,28 +127,29 @@ function SetupScreen({
               <button
                 key={slot}
                 onClick={() => setUserTeam(slot)}
-                className={`py-2 rounded-md border text-sm font-medium transition-colors ${
+                className={`py-2 rounded-md border text-sm font-mono tabular-nums font-medium transition-all ${
                   safeUserTeam === slot
-                    ? 'bg-foreground text-background border-foreground'
-                    : 'bg-background hover:bg-muted'
+                    ? 'bg-primary text-primary-foreground border-primary shadow-[0_0_16px_var(--neon-glow)]'
+                    : 'bg-background border-border hover:border-primary/40 hover:text-foreground'
                 }`}
               >
                 {slot}
               </button>
             ))}
           </div>
-          <div className="text-xs text-muted-foreground mt-2">
+          <div className="text-xs text-muted-foreground mt-2 font-mono">
             You will pick {picksForTeam(safeUserTeam, numTeams).slice(0, 3).join(', ')}…
           </div>
         </div>
 
-        <div className="text-xs text-muted-foreground border-t pt-3">
+        <div className="text-xs text-muted-foreground border-t border-border pt-3 font-mono">
           {NUM_ROUNDS} rounds · {totalPicks(numTeams)} total picks · 1QB / 2RB / 2WR / 1TE / 1FLEX / 6BENCH
         </div>
 
         <button
           onClick={onStart}
-          className="w-full py-3 rounded-md bg-foreground text-background font-medium hover:opacity-90 transition-opacity"
+          className="w-full py-3 rounded-md bg-primary text-primary-foreground font-semibold transition-all hover:scale-[1.01]"
+          style={{ boxShadow: '0 0 24px var(--neon-glow)' }}
         >
           Start draft
         </button>
@@ -257,37 +263,79 @@ function Status({
   const { round, pickInRound } = roundAndPickInRound(state.currentPick, state.numTeams);
   const total = totalPicks(state.numTeams);
 
-  let label = '';
-  if (isComplete) {
-    label = 'Draft complete';
-  } else if (userIsOnClock) {
-    label = 'You are on the clock';
-  } else {
-    label = `Team ${onTheClockTeam} is on the clock`;
-  }
-
   return (
-    <div className="rounded-md border bg-card p-4 flex items-center justify-between">
-      <div>
-        <div className="text-xs uppercase tracking-wide text-muted-foreground">
+    <div
+      className={`relative rounded-md border bg-card p-4 flex items-center justify-between overflow-hidden transition-all ${
+        userIsOnClock ? 'border-primary' : 'border-border'
+      }`}
+      style={
+        userIsOnClock
+          ? { boxShadow: '0 0 24px var(--neon-glow), inset 0 0 16px oklch(0.86 0.24 145 / 8%)' }
+          : undefined
+      }
+    >
+      {/* Animated scan line on the user's turn */}
+      {userIsOnClock && (
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent animate-scan" />
+      )}
+
+      <div className="relative">
+        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
           {isComplete
             ? `Pick ${total}/${total}`
-            : `Round ${round} · Pick ${pickInRound}/${state.numTeams} (Overall ${state.currentPick})`}
+            : `Round ${round} · Pick ${pickInRound}/${state.numTeams} · Overall ${state.currentPick}`}
         </div>
-        <div className={`text-lg font-semibold mt-1 ${userIsOnClock ? 'text-green-600 dark:text-green-400' : ''}`}>
-          {label}
+
+        <div className="mt-2 flex items-center gap-2.5">
+          {!isComplete && (
+            <span className="relative flex h-2 w-2">
+              <span
+                className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                  userIsOnClock ? 'animate-ping bg-primary' : 'bg-muted-foreground'
+                }`}
+              />
+              <span
+                className={`relative inline-flex rounded-full h-2 w-2 ${
+                  userIsOnClock ? 'bg-primary' : 'bg-muted-foreground'
+                }`}
+              />
+            </span>
+          )}
+          <div
+            className={`text-xl font-bold tracking-tight ${
+              userIsOnClock ? 'text-primary' : isComplete ? 'text-foreground' : 'text-muted-foreground'
+            }`}
+            style={userIsOnClock ? { textShadow: '0 0 16px var(--neon-glow)' } : undefined}
+          >
+            {isComplete
+              ? 'Draft complete'
+              : userIsOnClock
+              ? 'YOU ARE ON THE CLOCK'
+              : `Team ${onTheClockTeam} thinking…`}
+          </div>
         </div>
-        <div className="text-xs text-muted-foreground mt-1">
+        <div className="text-xs text-muted-foreground mt-1 font-mono">
           You are Team {state.userTeam} of {state.numTeams}
         </div>
       </div>
+
       <button
         onClick={onReset}
-        className="px-3 py-2 rounded-md border bg-background text-sm hover:bg-muted transition-colors inline-flex items-center gap-1.5"
+        className="relative px-3 py-2 rounded-md border border-border bg-background text-sm hover:border-primary/40 hover:text-primary transition-all inline-flex items-center gap-1.5"
       >
         <RotateCcw className="h-3.5 w-3.5" />
         Reset
       </button>
+
+      <style>{`
+        @keyframes scan {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .animate-scan {
+          animation: scan 2.5s linear infinite;
+        }
+      `}</style>
     </div>
   );
 }
@@ -317,7 +365,7 @@ function AvailablePlayersPanel({
 
   return (
     <div className="rounded-md border bg-card overflow-hidden">
-      <div className="p-3 border-b flex items-center gap-2 flex-wrap">
+      <div className="p-3 border-b border-border flex items-center gap-2 flex-wrap">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
@@ -325,7 +373,7 @@ function AvailablePlayersPanel({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search players..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full pl-9 pr-3 py-1.5 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring/60"
           />
         </div>
         <div className="flex gap-1">
@@ -333,10 +381,10 @@ function AvailablePlayersPanel({
             <button
               key={p}
               onClick={() => setPosFilter(p)}
-              className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
                 posFilter === p
-                  ? 'bg-foreground text-background'
-                  : 'bg-muted hover:bg-muted/70'
+                  ? 'bg-primary text-primary-foreground shadow-[0_0_12px_var(--neon-glow)]'
+                  : 'bg-muted/60 hover:bg-muted'
               }`}
             >
               {p}
@@ -347,41 +395,46 @@ function AvailablePlayersPanel({
 
       <div className="max-h-[420px] overflow-y-auto">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-card border-b">
-            <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <th className="px-3 py-2">#</th>
-              <th className="px-3 py-2">Player</th>
-              <th className="px-3 py-2">Pos</th>
-              <th className="px-3 py-2 text-right">Total</th>
-              <th className="px-3 py-2 text-right">Composite</th>
+          <thead className="sticky top-0 bg-muted/30 border-b border-border z-10">
+            <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
+              <th className="px-3 py-2 font-medium">#</th>
+              <th className="px-3 py-2 font-medium">Player</th>
+              <th className="px-3 py-2 font-medium">Pos</th>
+              <th className="px-3 py-2 text-right font-medium">Total</th>
+              <th className="px-3 py-2 text-right font-medium">Composite</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border/50">
             {filtered.map((p) => (
-              <tr key={p.player_display_name} className="border-b hover:bg-muted/30">
-                <td className="px-3 py-2 text-muted-foreground">{p.main_rank}</td>
-                <td className="px-3 py-2 font-medium">
-                    <Link
-                        href={`/player/${encodeURIComponent(p.player_display_name)}`}
-                        target="_blank"
-                        className="hover:underline"
-                    >
-                        {p.player_display_name}
-                    </Link>
-                    </td>
-                <td className="px-3 py-2">
-                  <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-muted">
-                    {p.position}{p.pos_rank}
-                  </span>
+              <tr key={p.player_display_name} className="group hover:bg-primary/5 transition-colors">
+                <td className="px-3 py-2 font-mono tabular-nums text-muted-foreground">
+                  {p.main_rank}
                 </td>
-                <td className="px-3 py-2 text-right font-mono text-xs">{p.p50_total.toFixed(0)}</td>
-                <td className="px-3 py-2 text-right font-mono text-xs">{p.composite_score.toFixed(2)}</td>
+                <td className="px-3 py-2 font-medium">
+                  <Link
+                    href={`/player/${encodeURIComponent(p.player_display_name)}`}
+                    target="_blank"
+                    className="hover:text-primary transition-colors"
+                  >
+                    {p.player_display_name}
+                  </Link>
+                </td>
+                <td className="px-3 py-2">
+                  <PositionBadge position={p.position} posRank={p.pos_rank} />
+                </td>
+                <td className="px-3 py-2 text-right font-mono tabular-nums text-xs">
+                  {p.p50_total.toFixed(0)}
+                </td>
+                <td className="px-3 py-2 text-right font-mono tabular-nums text-xs font-semibold text-primary">
+                  {p.composite_score.toFixed(2)}
+                </td>
                 <td className="px-3 py-2 text-right">
                   <button
                     onClick={() => onPick(p)}
                     disabled={!canPick}
-                    className="px-2.5 py-1 rounded text-xs font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+                    className="px-2.5 py-1 rounded text-xs font-semibold bg-primary text-primary-foreground transition-all hover:scale-[1.04] disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    style={canPick ? { boxShadow: '0 0 12px var(--neon-glow)' } : undefined}
                   >
                     Draft
                   </button>
@@ -395,7 +448,7 @@ function AvailablePlayersPanel({
   );
 }
 
-/* -------- Draft board (rounds × teams grid) -------- */
+/* -------- Draft board -------- */
 
 function DraftBoard({
   picks,
@@ -413,18 +466,26 @@ function DraftBoard({
 
   return (
     <div className="rounded-md border bg-card overflow-hidden">
-      <div className="p-3 border-b">
-        <div className="font-semibold">Draft Board</div>
+      <div className="p-3 border-b border-border flex items-center gap-3">
+        <div className="h-px w-6 bg-primary shadow-[0_0_6px_var(--neon-glow)]" />
+        <div className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground">
+          Draft Board
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
-          <thead className="bg-muted/40">
+          <thead className="bg-muted/30 border-b border-border">
             <tr>
-              <th className="px-2 py-1.5 text-left text-muted-foreground">R</th>
+              <th className="px-2 py-2 text-left text-muted-foreground font-medium">R</th>
               {Array.from({ length: numTeams }, (_, i) => i + 1).map((team) => (
                 <th
                   key={team}
-                  className={`px-2 py-1.5 text-center min-w-[80px] ${team === userTeam ? 'text-green-600 dark:text-green-400 font-bold' : 'text-muted-foreground'}`}
+                  className={`px-2 py-2 text-center min-w-[80px] font-mono ${
+                    team === userTeam
+                      ? 'text-primary font-bold'
+                      : 'text-muted-foreground'
+                  }`}
+                  style={team === userTeam ? { textShadow: '0 0 8px var(--neon-glow)' } : undefined}
                 >
                   T{team}
                 </th>
@@ -433,32 +494,37 @@ function DraftBoard({
           </thead>
           <tbody>
             {Array.from({ length: NUM_ROUNDS }, (_, i) => i + 1).map((round) => (
-              <tr key={round} className="border-t">
-                <td className="px-2 py-1.5 text-muted-foreground font-medium">{round}</td>
+              <tr key={round} className="border-t border-border/50">
+                <td className="px-2 py-1.5 text-muted-foreground font-mono">{round}</td>
                 {Array.from({ length: numTeams }, (_, i) => i + 1).map((team) => {
                   const p = pickLookup[`${round}-${team}`];
                   const isUserCell = team === userTeam;
                   return (
                     <td
                       key={team}
-                      className={`px-2 py-1.5 text-center border-l ${isUserCell ? 'bg-green-50 dark:bg-green-950/20' : ''}`}
+                      className={`px-2 py-1.5 text-center border-l border-border/50 ${
+                        isUserCell ? 'bg-primary/[0.06]' : ''
+                      }`}
                     >
                       {p ? (
                         <Link
-                            href={`/player/${encodeURIComponent(p.player.player_display_name)}`}
-                            target="_blank"
-                            className="block hover:underline"
+                          href={`/player/${encodeURIComponent(p.player.player_display_name)}`}
+                          target="_blank"
+                          className="block group/cell"
                         >
-                            <div className="truncate font-medium" title={p.player.player_display_name}>
+                          <div
+                            className="truncate font-medium group-hover/cell:text-primary transition-colors"
+                            title={p.player.player_display_name}
+                          >
                             {shortName(p.player.player_display_name)}
-                            </div>
-                            <div className="text-muted-foreground text-[10px]">
+                          </div>
+                          <div className="text-muted-foreground text-[10px] font-mono">
                             {p.player.position}
-                            </div>
+                          </div>
                         </Link>
-                        ) : (
+                      ) : (
                         <span className="text-muted-foreground/30">—</span>
-                        )}
+                      )}
                     </td>
                   );
                 })}
@@ -485,37 +551,70 @@ function UserRoster({ picks }: { picks: Pick[] }) {
 
   return (
     <div className="rounded-md border bg-card overflow-hidden">
-      <div className="p-3 border-b">
-        <div className="font-semibold">Your roster</div>
-        <div className="text-xs text-muted-foreground mt-0.5">
-          {picks.length} picks · {totalProj.toFixed(0)} projected total
+      <div className="p-3 border-b border-border">
+        <div className="flex items-center gap-3">
+          <div className="h-px w-6 bg-primary shadow-[0_0_6px_var(--neon-glow)]" />
+          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground">
+            Your Roster
+          </div>
+        </div>
+        <div className="text-xs text-muted-foreground mt-2 font-mono">
+          {picks.length} picks ·{' '}
+          <span
+            className="text-primary font-semibold"
+            style={{ textShadow: '0 0 8px var(--neon-glow)' }}
+          >
+            {totalProj.toFixed(0)}
+          </span>{' '}
+          projected total
         </div>
       </div>
-      <div className="divide-y">
+      <div className="divide-y divide-border/50">
         {roster.map((slot, i) => (
           <div key={i} className="px-3 py-2 flex items-center justify-between text-sm">
-            <div className="text-xs uppercase tracking-wide text-muted-foreground w-14 shrink-0">
+            <div className="text-[10px] uppercase tracking-[0.15em] font-semibold text-muted-foreground w-14 shrink-0">
               {slot.slot}
             </div>
             <div className="flex-1 text-right">
               {slot.player ? (
                 <Link
-                    href={`/player/${encodeURIComponent(slot.player.player_display_name)}`}
-                    target="_blank"
-                    className="block hover:underline"
+                  href={`/player/${encodeURIComponent(slot.player.player_display_name)}`}
+                  target="_blank"
+                  className="block group/slot"
                 >
-                    <div className="font-medium">{slot.player.player_display_name}</div>
-                    <div className="text-xs text-muted-foreground">
-                    {slot.player.position}{slot.player.pos_rank} · {slot.player.team} · {slot.player.p50_total.toFixed(0)} pts
-                    </div>
+                  <div className="font-medium group-hover/slot:text-primary transition-colors">
+                    {slot.player.player_display_name}
+                  </div>
+                  <div className="text-xs text-muted-foreground font-mono">
+                    {slot.player.position}{slot.player.pos_rank} · {slot.player.team} ·{' '}
+                    <span className="text-foreground">{slot.player.p50_total.toFixed(0)}</span>
+                  </div>
                 </Link>
-                ) : (
-                <span className="text-muted-foreground/40">empty</span>
-                )}
+              ) : (
+                <span className="text-muted-foreground/40 italic text-xs">empty</span>
+              )}
             </div>
           </div>
         ))}
       </div>
     </div>
+  );
+}
+
+/* -------- Position badge -------- */
+
+function PositionBadge({ position, posRank }: { position: Player['position']; posRank: number }) {
+  const styles: Record<Player['position'], string> = {
+    QB: 'text-[oklch(0.7_0.2_25)] border-[oklch(0.7_0.2_25/40%)] bg-[oklch(0.7_0.2_25/10%)]',
+    RB: 'text-[oklch(0.78_0.2_145)] border-[oklch(0.78_0.2_145/40%)] bg-[oklch(0.78_0.2_145/10%)]',
+    WR: 'text-[oklch(0.72_0.2_250)] border-[oklch(0.72_0.2_250/40%)] bg-[oklch(0.72_0.2_250/10%)]',
+    TE: 'text-[oklch(0.78_0.18_80)] border-[oklch(0.78_0.18_80/40%)] bg-[oklch(0.78_0.18_80/10%)]',
+  };
+  return (
+    <span
+      className={`inline-flex items-center justify-center text-[11px] font-mono font-semibold tracking-wide px-2 py-0.5 rounded border ${styles[position]}`}
+    >
+      {position}{posRank}
+    </span>
   );
 }

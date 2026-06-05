@@ -9,8 +9,19 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-mono);
   --font-heading: var(--font-sans);
+
+  /* Position colors — used for position badges across the app */
+  --color-pos-qb: var(--pos-qb);
+  --color-pos-rb: var(--pos-rb);
+  --color-pos-wr: var(--pos-wr);
+  --color-pos-te: var(--pos-te);
+
+  /* Neon accent for stats / highlights */
+  --color-neon: var(--neon);
+  --color-neon-glow: var(--neon-glow);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,73 +60,111 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ============================================
+   :root is now the dark theme by default.
+   .dark class is also defined to match for any explicit usage.
+   ============================================ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  /* Deep, slightly warm near-black */
+  --background: oklch(0.16 0.01 250);
+
+  /* Off-white text with the slightest warmth */
+  --foreground: oklch(0.96 0.005 80);
+
+  /* Card surfaces — one step up from background */
+  --card: oklch(0.21 0.012 250);
+  --card-foreground: oklch(0.96 0.005 80);
+
+  /* Popover for menus / autocompletes — slightly elevated */
+  --popover: oklch(0.23 0.015 250);
+  --popover-foreground: oklch(0.96 0.005 80);
+
+  /* Primary is the neon green — used for hero buttons, highlights, on-the-clock */
+  --primary: oklch(0.86 0.24 145);
+  --primary-foreground: oklch(0.16 0.01 250);
+
+  --secondary: oklch(0.26 0.012 250);
+  --secondary-foreground: oklch(0.96 0.005 80);
+
+  --muted: oklch(0.24 0.01 250);
+  --muted-foreground: oklch(0.65 0.012 250);
+
+  --accent: oklch(0.27 0.015 250);
+  --accent-foreground: oklch(0.96 0.005 80);
+
+  --destructive: oklch(0.65 0.21 25);
+
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.86 0.24 145 / 50%);
+
+  /* Charts use neon variants */
+  --chart-1: oklch(0.86 0.24 145);  /* neon green */
+  --chart-2: oklch(0.7 0.18 200);   /* cyan accent */
+  --chart-3: oklch(0.75 0.18 80);   /* warm amber */
+  --chart-4: oklch(0.65 0.2 320);   /* magenta */
+  --chart-5: oklch(0.55 0.05 250);  /* muted blue */
+
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  --sidebar: oklch(0.18 0.012 250);
+  --sidebar-foreground: oklch(0.96 0.005 80);
+  --sidebar-primary: oklch(0.86 0.24 145);
+  --sidebar-primary-foreground: oklch(0.16 0.01 250);
+  --sidebar-accent: oklch(0.26 0.012 250);
+  --sidebar-accent-foreground: oklch(0.96 0.005 80);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.86 0.24 145 / 50%);
+
+  /* Position colors — saturated, distinct, readable on dark bg */
+  --pos-qb: oklch(0.7 0.2 25);    /* red-orange */
+  --pos-rb: oklch(0.75 0.2 145);  /* green */
+  --pos-wr: oklch(0.7 0.2 250);   /* blue */
+  --pos-te: oklch(0.75 0.18 80);  /* amber */
+
+  /* Neon green token + the glow variant used for shadows */
+  --neon: oklch(0.86 0.24 145);
+  --neon-glow: oklch(0.86 0.24 145 / 35%);
+
+  /* Font tokens */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
+/* .dark is the same as :root for now since we're dark-only.
+   Keeping the block so any `dark:` Tailwind classes still resolve. */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.16 0.01 250);
+  --foreground: oklch(0.96 0.005 80);
+  --card: oklch(0.21 0.012 250);
+  --card-foreground: oklch(0.96 0.005 80);
+  --popover: oklch(0.23 0.015 250);
+  --popover-foreground: oklch(0.96 0.005 80);
+  --primary: oklch(0.86 0.24 145);
+  --primary-foreground: oklch(0.16 0.01 250);
+  --secondary: oklch(0.26 0.012 250);
+  --secondary-foreground: oklch(0.96 0.005 80);
+  --muted: oklch(0.24 0.01 250);
+  --muted-foreground: oklch(0.65 0.012 250);
+  --accent: oklch(0.27 0.015 250);
+  --accent-foreground: oklch(0.96 0.005 80);
+  --destructive: oklch(0.65 0.21 25);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.86 0.24 145 / 50%);
+  --chart-1: oklch(0.86 0.24 145);
+  --chart-2: oklch(0.7 0.18 200);
+  --chart-3: oklch(0.75 0.18 80);
+  --chart-4: oklch(0.65 0.2 320);
+  --chart-5: oklch(0.55 0.05 250);
+  --sidebar: oklch(0.18 0.012 250);
+  --sidebar-foreground: oklch(0.96 0.005 80);
+  --sidebar-primary: oklch(0.86 0.24 145);
+  --sidebar-primary-foreground: oklch(0.16 0.01 250);
+  --sidebar-accent: oklch(0.26 0.012 250);
+  --sidebar-accent-foreground: oklch(0.96 0.005 80);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.86 0.24 145 / 50%);
 }
 
 @layer base {
@@ -124,8 +173,46 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Subtle radial highlight at top for visual interest without being distracting */
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.86 0.24 145 / 6%), transparent),
+      radial-gradient(ellipse 60% 50% at 80% 0%, oklch(0.7 0.18 250 / 4%), transparent);
+    background-attachment: fixed;
   }
   html {
     @apply font-sans;
   }
+
+  /* Force consistent number rendering for stats */
+  .tabular-nums,
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* Neon glow utility for stat highlights */
+  .neon-glow {
+    text-shadow: 0 0 12px var(--neon-glow), 0 0 24px var(--neon-glow);
+  }
+
+  /* Subtle card hover effect — slight border color shift + elevation */
+  .card-hover {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  }
+  .card-hover:hover {
+    border-color: oklch(0.86 0.24 145 / 25%);
+    box-shadow: 0 0 0 1px oklch(0.86 0.24 145 / 15%), 0 8px 24px oklch(0 0 0 / 30%);
+  }
+
+  /* Position badge — utility classes used on player position labels */
+  .pos-badge {
+    @apply inline-flex items-center justify-center px-1.5 py-0.5 rounded text-xs font-medium tabular-nums;
+    border: 1px solid currentColor;
+    background: color-mix(in oklch, currentColor 10%, transparent);
+  }
+  .pos-badge.pos-QB { color: var(--pos-qb); }
+  .pos-badge.pos-RB { color: var(--pos-rb); }
+  .pos-badge.pos-WR { color: var(--pos-wr); }
+  .pos-badge.pos-TE { color: var(--pos-te); }
 }

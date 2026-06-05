@@ -53,14 +53,12 @@ export function RankingsTable({ players }: { players: Player[] }) {
       setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
     } else {
       setSortKey(key);
-      // Rank columns default ascending (1 = best); everything else descending
       setSortDir(key === 'main_rank' || key === 'pos_rank' ? 'asc' : 'desc');
     }
   }
 
   return (
     <div className="space-y-4">
-      {/* Filter row */}
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -69,7 +67,7 @@ export function RankingsTable({ players }: { players: Player[] }) {
             placeholder="Search players…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full pl-9 pr-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring/60 transition-shadow"
           />
         </div>
 
@@ -78,10 +76,10 @@ export function RankingsTable({ players }: { players: Player[] }) {
             <button
               key={pos}
               onClick={() => setPosition(pos)}
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
                 position === pos
-                  ? 'bg-foreground text-background'
-                  : 'bg-muted text-foreground hover:bg-muted/80'
+                  ? 'bg-primary text-primary-foreground shadow-[0_0_16px_var(--neon-glow)]'
+                  : 'bg-muted/60 text-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
               {pos}
@@ -89,29 +87,28 @@ export function RankingsTable({ players }: { players: Player[] }) {
           ))}
         </div>
 
-        <div className="ml-auto text-sm text-muted-foreground">
+        <div className="ml-auto text-sm text-muted-foreground font-mono">
           {filtered.length} player{filtered.length === 1 ? '' : 's'}
         </div>
       </div>
 
-      {/* Table */}
-      <div className="rounded-md border overflow-hidden">
+      <div className="rounded-md border bg-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50 text-xs uppercase tracking-wide text-muted-foreground">
+            <thead className="bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
               <tr>
                 <ColHeader label="Rank" sortKey="main_rank" current={sortKey} dir={sortDir} onClick={toggleSort} align="left" />
-                <th className="px-3 py-2 text-left font-medium">Player</th>
-                <th className="px-3 py-2 text-left font-medium">Pos</th>
+                <th className="px-3 py-3 text-left font-medium">Player</th>
+                <th className="px-3 py-3 text-left font-medium">Pos</th>
                 <ColHeader label="Pos Rk" sortKey="pos_rank" current={sortKey} dir={sortDir} onClick={toggleSort} align="right" />
                 <ColHeader label="P50/Game" sortKey="proj_p50" current={sortKey} dir={sortDir} onClick={toggleSort} align="right" />
                 <ColHeader label="Total" sortKey="p50_total" current={sortKey} dir={sortDir} onClick={toggleSort} align="right" />
-                <th className="px-3 py-2 text-right font-medium">Range</th>
+                <th className="px-3 py-3 text-right font-medium">Range</th>
                 <ColHeader label="Uncertainty" sortKey="uncertainty_total" current={sortKey} dir={sortDir} onClick={toggleSort} align="right" />
                 <ColHeader label="Composite" sortKey="composite_score" current={sortKey} dir={sortDir} onClick={toggleSort} align="right" />
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-border/50">
               {filtered.map((p) => (
                 <PlayerRow key={p.player_display_name + '-' + p.main_rank} player={p} />
               ))}
@@ -146,11 +143,11 @@ function ColHeader({
 }) {
   const isActive = current === sortKey;
   return (
-    <th className={`px-3 py-2 font-medium text-${align}`}>
+    <th className={`px-3 py-3 font-medium text-${align}`}>
       <button
         onClick={() => onClick(sortKey)}
         className={`inline-flex items-center gap-1 hover:text-foreground transition-colors ${
-          isActive ? 'text-foreground' : ''
+          isActive ? 'text-primary' : ''
         }`}
       >
         {label}
@@ -164,42 +161,54 @@ function ColHeader({
 }
 
 function PlayerRow({ player }: { player: Player }) {
-
   return (
-    <tr className="hover:bg-muted/30 transition-colors">
-      <td className="px-3 py-2 font-mono text-muted-foreground">{player.main_rank}</td>
-      <td className="px-3 py-2">
+    <tr className="group hover:bg-primary/5 transition-colors relative">
+      <td className="px-3 py-2.5 font-mono text-muted-foreground tabular-nums relative">
+        <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_8px_var(--neon-glow)]" />
+        {player.main_rank}
+      </td>
+      <td className="px-3 py-2.5">
         <Link
           href={`/player/${encodeURIComponent(player.player_display_name)}`}
-          className="font-medium hover:underline"
+          className="font-medium hover:text-primary transition-colors"
         >
           {player.player_display_name}
         </Link>
       </td>
-      <td className="px-3 py-2">
+      <td className="px-3 py-2.5">
         <PositionBadge position={player.position} />
       </td>
-      <td className="px-3 py-2 text-right font-mono">{player.pos_rank}</td>
-      <td className="px-3 py-2 text-right font-mono">{player.proj_p50.toFixed(2)}</td>
-      <td className="px-3 py-2 text-right font-mono font-medium">{player.p50_total.toFixed(1)}</td>
-      <td className="px-3 py-2 text-right font-mono text-xs text-muted-foreground">
+      <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
+        {player.pos_rank}
+      </td>
+      <td className="px-3 py-2.5 text-right font-mono tabular-nums">
+        {player.proj_p50.toFixed(2)}
+      </td>
+      <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold">
+        {player.p50_total.toFixed(1)}
+      </td>
+      <td className="px-3 py-2.5 text-right font-mono tabular-nums text-xs text-muted-foreground">
         {player.p10_total.toFixed(0)}–{player.p90_total.toFixed(0)}
       </td>
-      <td className="px-3 py-2 text-right font-mono text-xs">{player.uncertainty_total.toFixed(0)}</td>
-      <td className="px-3 py-2 text-right font-mono font-medium">{player.composite_score.toFixed(2)}</td>
+      <td className="px-3 py-2.5 text-right font-mono tabular-nums text-xs text-muted-foreground">
+        {player.uncertainty_total.toFixed(0)}
+      </td>
+      <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold text-primary">
+        {player.composite_score.toFixed(2)}
+      </td>
     </tr>
   );
 }
 
 function PositionBadge({ position }: { position: Player['position'] }) {
-  const colors: Record<Player['position'], string> = {
-    QB: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-    RB: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-    WR: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-    TE: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+  const styles: Record<Player['position'], string> = {
+    QB: 'text-[oklch(0.7_0.2_25)] border-[oklch(0.7_0.2_25/40%)] bg-[oklch(0.7_0.2_25/10%)]',
+    RB: 'text-[oklch(0.78_0.2_145)] border-[oklch(0.78_0.2_145/40%)] bg-[oklch(0.78_0.2_145/10%)]',
+    WR: 'text-[oklch(0.72_0.2_250)] border-[oklch(0.72_0.2_250/40%)] bg-[oklch(0.72_0.2_250/10%)]',
+    TE: 'text-[oklch(0.78_0.18_80)] border-[oklch(0.78_0.18_80/40%)] bg-[oklch(0.78_0.18_80/10%)]',
   };
   return (
-    <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${colors[position]}`}>
+    <span className={`inline-flex items-center justify-center text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded border ${styles[position]}`}>
       {position}
     </span>
   );
