@@ -174,6 +174,6 @@ Vercel (auto-deploy on push)
 
 ## About me
 
-I'm **David Vassalluzzo** — an applied ML / data engineer based in Miami. DraftEdge is one of several projects I've built that combine real machine learning with production engineering. I'm particularly drawn to problems where uncertainty matters as much as the point estimate (draft strategy, risk modeling, calibration of probabilistic forecasts) and to the data-quality work that determines whether a model is actually useful or just looks good on a validation set.
+I'm **David Vassalluzzo** — an aspiring applied ML / software engineer studying Applied Math and Computer Science at Brown University. DraftEdge is one of the main projects I've built that combine real machine learning with production engineering. I'm particularly drawn to problems where uncertainty matters as much as the point estimate (draft strategy, risk modeling, calibration of probabilistic forecasts) and to the data-quality work that determines whether a model is actually useful or just looks good on a validation set.
 
 Find me on [GitHub](https://github.com/davidvass26).
