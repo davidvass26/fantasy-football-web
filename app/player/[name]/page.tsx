@@ -20,7 +20,7 @@ type Props = {
 export async function generateStaticParams() {
   const players = loadPlayers();
   return players.map((p) => ({
-    name: encodePlayerName(p.player_display_name),
+    name: p.player_display_name,
   }));
 }
 
