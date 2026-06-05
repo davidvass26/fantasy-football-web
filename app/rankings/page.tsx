@@ -19,6 +19,7 @@ export default function RankingsPage() {
         <h1 className="text-4xl font-bold tracking-tight">Rankings</h1>
         <p className="mt-2 text-muted-foreground">
           {players.length} players ranked by composite score
+          These rankings are geared towards a 12 team league making RBs more valuable than receivers due to VOR
         </p>
       </div>
 
