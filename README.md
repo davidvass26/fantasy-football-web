@@ -17,7 +17,7 @@ This repository contains the Next.js web application. The ML training pipeline l
 
 | | |
 |---|---|
-| **Players projected** | 645 (QB, RB, WR, TE) |
+| **Players projected** | 807 (QB, RB, WR, TE) |
 | **Training data** | 11 NFL seasons (2015–2025), ~3,300 player-seasons |
 | **Engineered features** | 86 per player |
 | **Quantile models** | 3 (p10, p50, p90) + a dedicated rookie model |
