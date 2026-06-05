@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowUpDown, Search } from 'lucide-react';
 import type { Player } from '@/lib/players';
+import { playerUrl } from '@/lib/player-url';
 
 type SortKey =
   | 'main_rank'
@@ -169,7 +170,7 @@ function PlayerRow({ player }: { player: Player }) {
       </td>
       <td className="px-3 py-2.5">
         <Link
-          href={`/player/${encodeURIComponent(player.player_display_name)}`}
+          href={playerUrl(player.player_display_name)}
           className="font-medium hover:text-primary transition-colors"
         >
           {player.player_display_name}

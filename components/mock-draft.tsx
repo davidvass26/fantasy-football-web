@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 import type { Player } from '@/lib/players';
+import { playerUrl } from '@/lib/player-url';
 import {
   SUPPORTED_TEAM_COUNTS,
   type TeamCount,
@@ -413,7 +414,7 @@ function AvailablePlayersPanel({
                 </td>
                 <td className="px-3 py-2 font-medium">
                   <Link
-                    href={`/player/${encodeURIComponent(p.player_display_name)}`}
+                    href={playerUrl(p.player_display_name)}
                     target="_blank"
                     className="hover:text-primary transition-colors"
                   >
@@ -508,7 +509,7 @@ function DraftBoard({
                     >
                       {p ? (
                         <Link
-                          href={`/player/${encodeURIComponent(p.player.player_display_name)}`}
+                          href={playerUrl(p.player.player_display_name)}
                           target="_blank"
                           className="block group/cell"
                         >
@@ -578,7 +579,7 @@ function UserRoster({ picks }: { picks: Pick[] }) {
             <div className="flex-1 text-right">
               {slot.player ? (
                 <Link
-                  href={`/player/${encodeURIComponent(slot.player.player_display_name)}`}
+                  href={playerUrl(slot.player.player_display_name)}
                   target="_blank"
                   className="block group/slot"
                 >

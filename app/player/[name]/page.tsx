@@ -10,6 +10,8 @@ import { ArrowLeft } from 'lucide-react';
 import { loadPlayers, type Player } from '@/lib/players';
 import { getTeamLogoUrl } from '@/lib/team-logos';
 import { getTeamColors } from '@/lib/team-colors';
+import { encodePlayerName } from '@/lib/player-url';
+
 
 type Props = {
   params: Promise<{ name: string }>;
@@ -18,7 +20,7 @@ type Props = {
 export async function generateStaticParams() {
   const players = loadPlayers();
   return players.map((p) => ({
-    name: encodeURIComponent(p.player_display_name),
+    name: encodePlayerName(p.player_display_name),
   }));
 }
 

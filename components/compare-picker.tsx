@@ -11,6 +11,7 @@ import { Search, X, Sparkles } from 'lucide-react';
 import type { Player } from '@/lib/players';
 import { getTeamLogoUrl } from '@/lib/team-logos';
 import { getTeamColors, type TeamColors } from '@/lib/team-colors';
+import { playerUrl } from '@/lib/player-url';
 
 type Props = {
   players: Player[];
@@ -205,7 +206,7 @@ function SelectedPlayerCard({
       )}
       <div className="flex-1 min-w-0">
         <Link
-          href={`/player/${encodeURIComponent(player.player_display_name)}`}
+          href={playerUrl(player.player_display_name)}
           className="font-semibold transition-colors"
           style={{ color: 'inherit' }}
         >
@@ -275,7 +276,7 @@ function ComparisonGrid({ a, b, allPlayers }: { a: Player; b: Player; allPlayers
               }}
             />
             <Link
-              href={`/player/${encodeURIComponent(a.player_display_name)}`}
+              href={playerUrl(a.player_display_name)}
               className="hover:underline"
               style={{ color: colorsA.primary }}
             >
@@ -299,7 +300,7 @@ function ComparisonGrid({ a, b, allPlayers }: { a: Player; b: Player; allPlayers
               }}
             />
             <Link
-              href={`/player/${encodeURIComponent(b.player_display_name)}`}
+              href={playerUrl(b.player_display_name)}
               className="hover:underline"
               style={{ color: colorsB.primary }}
             >
