@@ -9,7 +9,7 @@
 
 DraftEdge is an end-to-end machine learning product that projects every fantasy-relevant NFL player for the 2026 season. Unlike conventional ranking sites that publish a single point estimate per player, DraftEdge trains three quantile regression models — floor, median, and ceiling — so users see the *range* of likely outcomes, not just the average.
 
-The model achieves **2.88 MAE** on rolling validation across the two most recent complete NFL seasons (2023, 2024) — a **22% improvement** over the naive "next year equals last year" baseline.
+The model achieves **2.79 MAE** on rolling validation across the two most recent complete NFL seasons (2023, 2024) — a **22% improvement** over the naive "next year equals last year" baseline.
 
 This repository contains the Next.js web application. The ML training pipeline lives in a [separate repo](https://github.com/davidvass26/fantasy-football-ml-helper).
 
@@ -21,7 +21,7 @@ This repository contains the Next.js web application. The ML training pipeline l
 | **Training data** | 11 NFL seasons (2015–2025), ~3,300 player-seasons |
 | **Engineered features** | 86 per player |
 | **Quantile models** | 3 (p10, p50, p90) + a dedicated rookie model |
-| **Validation MAE** | 2.88 PPR points/game |
+| **Validation MAE** | 2.79 PPR points/game |
 | **Baseline improvement** | 22% over last-year-equals-next-year |
 | **Stack** | Python (XGBoost, Polars, Optuna) · Next.js 16 · TypeScript · Tailwind |
 
